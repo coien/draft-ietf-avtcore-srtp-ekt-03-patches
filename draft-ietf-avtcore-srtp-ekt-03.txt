@@ -319,7 +319,7 @@ Internet-Draft                  EKT SRTP                    October 2014
 
    SRTP_Master_Key:  On the sender side, the SRTP Master Key associated
       with the indicated SSRC.  The length of this field depends on the
-      cipher suite negotiated during call setup for SRTP or SRTCP.
+      SRTP transform negotiated during call setup for SRTP or SRTCP.
 
    SSRC:  On the sender side, this field is the SSRC for this SRTP
       source.  The length of this field is fixed at 32 bits.
