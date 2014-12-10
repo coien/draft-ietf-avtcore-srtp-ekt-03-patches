@@ -261,7 +261,7 @@ Internet-Draft                  EKT SRTP                    October 2014
    and other additional information, an additional EKT field is added to
    SRTP or SRTCP packets.  When added to SRTCP, the EKT field appears at
    the end of the packet, after the authentication tag, if that tag is
-   present, or after the SRTCP index otherwise.  When added to SRTP, The
+   present, or after the SRTCP index otherwise.  When added to SRTP, the
    EKT field appears at the end of the SRTP packet, after the
    authentication tag (if that tag is present), or after the ciphertext
    of the encrypted portion of the packet otherwise.
@@ -1410,7 +1410,7 @@ Internet-Draft                  EKT SRTP                    October 2014
 4.1.  DTLS-SRTP Recap
 
    DTLS-SRTP [RFC5764] uses an extended DTLS exchange between two peers
-   to exchange keying material, algorithms, and parapeters for SRTP.
+   to exchange keying material, algorithms, and parameters for SRTP.
    The SRTP flow operates over the same transport as the DTLS-SRTP
    exchange (i.e., the same 5-tuple).  DTLS-SRTP combines the
    performance and encryption flexibility benefits of SRTP with the
