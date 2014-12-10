@@ -564,8 +564,8 @@ Internet-Draft                  EKT SRTP                    October 2014
        <From, To> pair of indices (Section 8.1.1 of [RFC3711]) that can
        be associated with a master key.
 
-   7.  The newly accepted SRTP master key, the SRTP parameters from the
-       matching parameter set, and the SSRC from the packet are stored
+   7.  The newly accepted SRTP master key and the SRTP parameters from the
+       matching parameter set are stored
        in the crypto context associated with the SRTP source (SSRC).
        The SRTP Key Derivation algorithm is run in order to compute the
        SRTP encryption and authentication keys, and those keys are
