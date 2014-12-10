@@ -344,10 +344,8 @@ Internet-Draft                  EKT SRTP                    October 2014
       form) by the EKT Ciphertext field of this packet.  When this field
       is present in an RTCP packet it indicates the RTP sequence number
       of the first RTP packet encrypted by this master key.  If the ISN
-      field is zero, it indicates that the initial RTP/RTCP packet
-      protected using the SRTP master key conveyed in this packet
-      preceded, or was concurrent with, the last roll-over of the RTP
-      sequence number, and thus should be used as the current master key
+      field is zero, it indicates that the SRTP master key conveyed in this packet
+      should be used as the current master key
       for processing this packet.  The length of this field is fixed at
       16 bits.
 
@@ -457,12 +455,11 @@ Internet-Draft                  EKT SRTP                    October 2014
    of the SRTP rollover counter (represented as an unsigned integer in
    network byte order).
 
-   The Initial Sequence Number field is set to zero, if the initial RTP
-   packet protected using the current SRTP master key for this source
-   preceded, or was concurrent with, the last roll-over of the RTP
-   sequence number.  Otherwise, that field is set to the value of the
+   The Initial Sequence Number field is set to the value of the
    RTP sequence number of the initial RTP packet that was or will be
-   protected by that key.  See "rekey" in Section 2.6.  The rekeying
+   protected by that key.  If the key is used on the current packet,
+   then the ISN is set to zero.
+   See "rekey" in Section 2.6.  The rekeying
    event MUST NOT change the value of ROC (otherwise, the current value
    of the ROC would not be known to late joiners of existing sessions).
    This means rekeying near the end of sequence number space (e.g., 100
@@ -546,10 +543,12 @@ Internet-Draft                  EKT SRTP                    October 2014
        the SSRC indicated in the EKT_Plaintext, beginning at the
        sequence number indicated by the ISN (see next step).
 
-   6.  If the ISN from the EKT_Plaintext is less than the RTP sequence
+   6.  If the ISN from the EKT_Plaintext is zero then the SRTP Master Key
+       is to be used from the current sequence number of the packet.
+       Otherwise, if the ISN is less than the RTP sequence
        number of an authenticated received SRTP packet, then EKT
-       processing halts (as this is a replay).  If the Initial Sequence
-       Number field is nonzero, then the initial sequence number for the
+       processing halts (as this is a replay).
+       The initial sequence number for the
        SRTP master key is set to the packet index created by appending
        that field to the current rollover counter and treating the
        result as a 48-bit unsigned integer.  The initial sequence number
