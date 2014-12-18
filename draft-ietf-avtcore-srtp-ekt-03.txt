@@ -295,7 +295,7 @@ Internet-Draft                  EKT SRTP                    October 2014
 
         EKT_Ciphertext = EKT_Encrypt(EKT_Key, EKT_Plaintext)
 
-        Full_EKT_Field = EKT_Ciphertext || SPI || '1'
+        Full_EKT_Field = EKT_Ciphertext || SPI || Z || '1'
 
         Short_EKT_Field = Reserved || '0'
 
@@ -347,7 +347,11 @@ Internet-Draft                  EKT SRTP                    October 2014
       field is zero, it indicates that the SRTP master key conveyed in this packet
       should be used as the current master key
       for processing this packet.  The length of this field is fixed at
-      16 bits.
+      16 bits or at 0 bits in the case described in the following.
+
+      This field MAY be left empty when the ISN value is zero.  A zero ISN
+      SHOULD be communicated in this manner.  The Z bit is used to indicate
+      whether the field occupies 16 bits or is empty, occupying 0 bits.
 
    Security Parameter Index (SPI):  This field is included in SRTP and
       SRTCP packets when EKT is in use.  It indicates the appropriate
@@ -355,7 +359,7 @@ Internet-Draft                  EKT SRTP                    October 2014
       processing the packet.  It is an "index" into a table of
       possibilities (which are established via signaling or some other
       out-of-band means), much like the IPsec Security Parameter Index
-      [RFC4301].  The length of this field is fixed at 15 bits.  The
+      [RFC4301].  The length of this field is fixed at 14 bits.  The
       parameters identified by this field are:
 
       *  The EKT key used to process the packet.
@@ -376,6 +380,8 @@ Internet-Draft                  EKT SRTP                    October 2014
       Within each SRTP session, each distinct EKT parameter set that may
       be used MUST be associated with a distinct SPI value, to avoid
       ambiguity.
+
+   Z: This bit MUST be '1' if and only if the ISN field occupies 0 bits.
 
    Reserved:  The length of this field is 7 bits.  MUST be all zeros on
       transmission, and MUST be ignored on reception.
@@ -1310,10 +1316,10 @@ Internet-Draft                  EKT SRTP                    October 2014
    into earlier-described steps.]]
 
    Finally, subsequent offer/answer exchanges MUST NOT remap a given SPI
-   value to a different EKT parameter set until 2^15 other mappings have
+   value to a different EKT parameter set until 2^14 other mappings have
    been used within the SRTP session.  In practice, this requirements is
    most easily met by using a monotonically increasing SPI value (modulo
-   2^15 and starting with zero) per direct SRTP session.  Note that a
+   2^14 and starting with zero) per direct SRTP session.  Note that a
    direct SRTP session may span multiple SIP dialogs, and in such cases
    coordination of SPI values across those SIP dialogs will be required.
    In the simple point-to-point unicast case without translators, the
@@ -1757,7 +1763,7 @@ Internet-Draft                  EKT SRTP                    October 2014
            Type | Meaning                     | Possible values
            ----------------------------------------------------
             TBD | EKT cipher                  | see below
-            TBD | EKT SPI                     | a 15-bit value
+            TBD | EKT SPI                     | a 14-bit value
 
                Figure 10: MIKEY Security Protocol Parameters
 
@@ -2034,12 +2040,12 @@ Internet-Draft                  EKT SRTP                    October 2014
 
    In some scenarios, two SRTP sessions may be combined into a single
    session.  When using EKT in such sessions, it is desirable to have an
-   SPI value that is larger than 15 bits, so that collisions between SPI
+   SPI value that is larger than 14 bits, so that collisions between SPI
    values in use in the two different sessions are unlikely (since each
    collision would confuse the members of one of the sessions).
 
    An alternative that addresses both of these needs is as follows: the
-   SPI value can be lengthed from 15 bits to 63 bits, and the Master
+   SPI value can be lengthed from 14 bits to 62 bits, and the Master
    Salt can be identical to, or constructed from, the SPI value.  SRTP
    conventionally uses a 14-byte Master Salt, but shorter values are
    acceptable.  This alternative would add six bytes to each EKT packet;
